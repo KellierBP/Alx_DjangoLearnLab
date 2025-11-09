@@ -17,7 +17,7 @@ urlpatterns = [
     path('member-dashboard/', member_dashboard, name='member_dashboard'),
 
     # Permission-based URLs for book operations
-    path('add-book/', add_book, name='add_book'),
-    path('edit-book/<int:pk>/', edit_book, name='edit_book'),
-    path('delete-book/<int:pk>/', delete_book, name='delete_book'),
+    path('add_book/', add_book, name='add_book'),
+    path('edit_book/<int:pk>/', edit_book, name='edit_book'),
+    path('delete_book/<int:pk>/', delete_book, name='delete_book'),
 ]
