@@ -6,7 +6,7 @@ from django.views import View
 from django.views.generic import DetailView
 
 # ----------------------------
-# Import models for the app
+# Import models
 # ----------------------------
 from .models import Book, Library
 
@@ -14,15 +14,19 @@ from .models import Book, Library
 # Function-Based View: List all books
 # ----------------------------
 def list_books(request):
-    """Displays a list of all books with their authors."""
-    books = Book.objects.all()  # ✅ required by test
-    return render(request, 'relationship_app/list_books.html', {'books': books})  # ✅ required by test
+    """
+    Displays a list of all books with their authors.
+    """
+    books = Book.objects.all()  # ✅ required for tests
+    return render(request, 'relationship_app/list_books.html', {'books': books})  # ✅ required for tests
 
 # ----------------------------
 # Class-Based View: Library Details
 # ----------------------------
 class LibraryDetailView(DetailView):
-    """Displays details of a library and all books it contains."""
+    """
+    Displays details of a library and all books it contains.
+    """
     model = Library
     template_name = 'relationship_app/library_detail.html'
     context_object_name = 'library'
@@ -31,7 +35,9 @@ class LibraryDetailView(DetailView):
 # User Registration View
 # ----------------------------
 class RegisterView(View):
-    """Handles user registration using Django's built-in UserCreationForm."""
+    """
+    Handles user registration using Django's built-in UserCreationForm.
+    """
     def get(self, request):
         form = UserCreationForm()
         return render(request, 'relationship_app/register.html', {'form': form})
@@ -47,7 +53,9 @@ class RegisterView(View):
 # User Login View
 # ----------------------------
 class CustomLoginView(LoginView):
-    """Handles user login."""
+    """
+    Handles user login.
+    """
     template_name = 'relationship_app/login.html'
 
     def get_success_url(self):
@@ -58,5 +66,7 @@ class CustomLoginView(LoginView):
 # User Logout View
 # ----------------------------
 class CustomLogoutView(LogoutView):
-    """Handles user logout."""
+    """
+    Handles user logout.
+    """
     template_name = 'relationship_app/logout.html'
