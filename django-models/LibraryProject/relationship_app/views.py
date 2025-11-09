@@ -3,7 +3,8 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import DetailView
+from django.views.generic.detail import DetailView
+
 
 # ----------------------------
 # Import models
