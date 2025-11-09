@@ -8,7 +8,8 @@ from django.views.generic import DetailView
 # ----------------------------
 # Import models
 # ----------------------------
-from .models import Book, Library
+from .models import Book
+from .models import Library
 
 # ----------------------------
 # Function-Based View: List all books
