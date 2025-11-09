@@ -1,7 +1,4 @@
-from .views import (
-    list_books, LibraryDetailView,
-    RegisterView, CustomLoginView, CustomLogoutView
-)
+from .views import list_books, LibraryDetailView, RegisterView, CustomLoginView, CustomLogoutView
 from .admin_view import admin_dashboard
 from .librarian_view import librarian_dashboard
 from .member_view import member_dashboard
