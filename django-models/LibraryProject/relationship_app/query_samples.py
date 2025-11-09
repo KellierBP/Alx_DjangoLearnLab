@@ -1,9 +1,7 @@
 import django
 import os
 
-# ----------------------------
-# Setup Django environment (standalone)
-# ----------------------------
+# Setup Django environment (only if running this file standalone)
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_models.settings')
 django.setup()
 
@@ -11,9 +9,7 @@ from relationship_app.models import Author, Book, Library, Librarian
 
 
 def sample_queries():
-    # ----------------------------
     # 1️⃣ Query all books by a specific author
-    # ----------------------------
     author_name = "J.K. Rowling"
     try:
         author = Author.objects.get(name=author_name)
@@ -24,9 +20,7 @@ def sample_queries():
     except Author.DoesNotExist:
         print(f"No author found with name '{author_name}'")
 
-    # ----------------------------
     # 2️⃣ List all books in a library
-    # ----------------------------
     library_name = "Central Library"
     try:
         library = Library.objects.get(name=library_name)
@@ -37,18 +31,13 @@ def sample_queries():
     except Library.DoesNotExist:
         print(f"No library found with name '{library_name}'")
 
-    # ----------------------------
-    # 3️⃣ Retrieve the librarian for a library
-    # ----------------------------
+    # 3️⃣ Retrieve the librarian for a library using Librarian.objects.get
     try:
-        librarian = library.librarian
+        librarian = Librarian.objects.get(library=library)
         print(f"\nLibrarian for {library_name}: {librarian.name}")
     except Librarian.DoesNotExist:
         print(f"No librarian assigned to '{library_name}'")
 
 
-# ----------------------------
-# Run the sample queries
-# ----------------------------
 if __name__ == "__main__":
     sample_queries()
