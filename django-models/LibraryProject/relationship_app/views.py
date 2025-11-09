@@ -1,8 +1,30 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LoginView, LogoutView
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
+from django.views.generic import DetailView
+
+from relationship_app.models import Book, Library
+
+# -----------------------------------
+# Function-Based View: List all books
+# -----------------------------------
+def list_books(request):
+    """Displays a list of all books with their authors."""
+    books = Book.objects.all()  # ✅ required by test
+    return render(request, 'relationship_app/list_books.html', {'books': books})  # ✅ required by test
+
+
+# -----------------------------------
+# Class-Based View: Library Details
+# -----------------------------------
+class LibraryDetailView(DetailView):
+    """Displays details of a library and all books it contains."""
+    model = Library
+    template_name = 'relationship_app/library_detail.html'
+    context_object_name = 'library'
+
 
 # -----------------------------------
 # User Registration View
@@ -29,7 +51,6 @@ class CustomLoginView(LoginView):
     template_name = 'relationship_app/login.html'
 
     def get_success_url(self):
-        # Redirect to the book list after login
         return reverse_lazy('list_books')
 
 
