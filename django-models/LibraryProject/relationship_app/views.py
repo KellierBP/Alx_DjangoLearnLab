@@ -1,9 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import login
 from django.shortcuts import redirect, render, get_object_or_404
-from django.urls import reverse_lazy
-from django.views import View
 from django.views.generic.detail import DetailView
 
 
@@ -37,40 +34,18 @@ class LibraryDetailView(DetailView):
 # ----------------------------
 # User Registration View
 # ----------------------------
-class RegisterView(View):
+def register(request):
     """
     Handles user registration using Django's built-in UserCreationForm.
     """
-    def get(self, request):
-        form = UserCreationForm()
-        return render(request, 'relationship_app/register.html', {'form': form})
-
-    def post(self, request):
+    if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
             return redirect('list_books')
-        return render(request, 'relationship_app/register.html', {'form': form})
+    else:
+        form = UserCreationForm()
+    return render(request, 'relationship_app/register.html', {'form': form})
 
-# ----------------------------
-# User Login View
-# ----------------------------
-class CustomLoginView(LoginView):
-    """
-    Handles user login.
-    """
-    template_name = 'relationship_app/login.html'
 
-    def get_success_url(self):
-        # Redirect to the book list after login
-        return reverse_lazy('list_books')
-
-# ----------------------------
-# User Logout View
-# ----------------------------
-class CustomLogoutView(LogoutView):
-    """
-    Handles user logout.
-    """
-    template_name = 'relationship_app/logout.html'
