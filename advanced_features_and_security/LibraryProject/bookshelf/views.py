@@ -2,7 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import permission_required
 from django.contrib import messages
 from .models import Book
-from .forms import BookForm, ExampleForm  # Secure forms with validation
+from .forms import BookForm
+from .forms import ExampleForm  # Secure forms with validation
 
 # Create your views here.
 
