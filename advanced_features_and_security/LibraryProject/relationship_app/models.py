@@ -1,45 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
-# ----------------------------
-# Custom User Manager
-# ----------------------------
-class CustomUserManager(BaseUserManager):
-    def create_user(self, username, email=None, password=None, **extra_fields):
-        if not username:
-            raise ValueError('The Username field must be set')
-        email = self.normalize_email(email) if email else None
-        user = self.model(username=username, email=email, **extra_fields)
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
-
-    def create_superuser(self, username, email=None, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_active', True)
-
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Superuser must have is_staff=True.')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser must have is_superuser=True.')
-
-        return self.create_user(username, email, password, **extra_fields)
-
-# ----------------------------
-# Custom User Model
-# ----------------------------
-class CustomUser(AbstractUser):
-    date_of_birth = models.DateField(null=True, blank=True)
-    profile_photo = models.ImageField(upload_to='profile_photos/', null=True, blank=True)
-
-    objects = CustomUserManager()
-
-    def __str__(self):
-        return self.username
-
 
 # ----------------------------
 # UserProfile Model
@@ -55,7 +17,7 @@ class UserProfile(models.Model):
         (ROLE_MEMBER, 'Member'),
     ]
 
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='profile')
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, related_name='profile')
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default=ROLE_MEMBER)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -75,13 +37,13 @@ class UserProfile(models.Model):
 
 
 # Signals for automatic profile creation
-@receiver(post_save, sender=CustomUser)
+@receiver(post_save, sender=get_user_model())
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
 
 
-@receiver(post_save, sender=CustomUser)
+@receiver(post_save, sender=get_user_model())
 def save_user_profile(sender, instance, **kwargs):
     if hasattr(instance, 'profile'):
         instance.profile.save()
