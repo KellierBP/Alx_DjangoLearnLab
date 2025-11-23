@@ -63,6 +63,7 @@ Users should only be able to perform actions allowed by their group's permission
 ### 1. Secure Settings Configuration
 - `DEBUG = False` in production
 - `SECURE_SSL_REDIRECT = True` - Redirects all HTTP requests to HTTPS
+- `SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')` - Tells Django the connection is secure when behind a proxy
 - `SECURE_HSTS_SECONDS = 31536000` - Enforces HTTPS for one year
 - `SECURE_HSTS_INCLUDE_SUBDOMAINS = True` - Includes subdomains in HSTS policy
 - `SECURE_HSTS_PRELOAD = True` - Allows preloading in browser HSTS lists
@@ -154,6 +155,7 @@ server {
     <Location />
         ProxyPass http://127.0.0.1:8000/
         ProxyPassReverse http://127.0.0.1:8000/
+        RequestHeader set X-Forwarded-Proto https
     </Location>
 
     Alias /static/ /path/to/your/static/files/
@@ -192,6 +194,7 @@ gunicorn --certfile=/path/to/cert.pem --keyfile=/path/to/key.pem LibraryProject.
 
 1. **HTTPS Enforcement**:
    - `SECURE_SSL_REDIRECT = True`: Automatically redirects all HTTP traffic to HTTPS, ensuring encrypted communication.
+   - `SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')`: Allows Django to detect HTTPS when behind a reverse proxy that terminates SSL.
    - `SECURE_HSTS_SECONDS = 31536000`: HTTP Strict Transport Security (HSTS) forces browsers to use HTTPS for the next year, preventing protocol downgrade attacks.
    - `SECURE_HSTS_INCLUDE_SUBDOMAINS = True`: Extends HSTS protection to all subdomains.
    - `SECURE_HSTS_PRELOAD = True`: Allows the domain to be included in browser preload lists for immediate HTTPS enforcement.

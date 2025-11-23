@@ -132,6 +132,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Security Settings
 # These settings enhance application security by preventing common vulnerabilities
 SECURE_SSL_REDIRECT = True  # Redirects all HTTP requests to HTTPS
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # Tells Django the connection is secure when behind a proxy
 SECURE_HSTS_SECONDS = 31536000  # Enforces HTTPS for one year (31536000 seconds)
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Includes subdomains in HSTS policy
 SECURE_HSTS_PRELOAD = True  # Allows preloading in browser HSTS lists
