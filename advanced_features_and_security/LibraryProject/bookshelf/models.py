@@ -56,3 +56,8 @@ class Book(models.Model):
             ("can_edit", "Can edit books"),
             ("can_delete", "Can delete books"),
         ]
+        # Custom permissions defined for access control:
+        # - can_view: Allows viewing books
+        # - can_create: Allows creating new books
+        # - can_edit: Allows editing existing books
+        # - can_delete: Allows deleting books

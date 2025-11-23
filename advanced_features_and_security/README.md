@@ -4,7 +4,7 @@ This Django application implements a permission-based access control system usin
 
 ## Custom Permissions
 
-Custom permissions have been added to the `Book` model in `relationship_app/models.py`:
+Custom permissions have been added to the `Book` model in `bookshelf/models.py`:
 
 - `can_view`: Allows users to view books
 - `can_create`: Allows users to create new books
@@ -21,12 +21,13 @@ Three user groups have been created with assigned permissions:
 
 ## Views with Permission Checks
 
-The following views enforce permissions using the `@permission_required` decorator:
+The following views in `bookshelf/views.py` enforce permissions using the `@permission_required` decorator:
 
-- `list_books`: Requires `can_view` permission
-- `add_book`: Requires `can_create` permission
-- `edit_book`: Requires `can_edit` permission
-- `delete_book`: Requires `can_delete` permission
+- `book_list`: Requires `can_view` permission
+- `book_detail`: Requires `can_view` permission
+- `book_create`: Requires `can_create` permission
+- `book_update`: Requires `can_edit` permission
+- `book_delete`: Requires `can_delete` permission
 
 ## Setup Instructions
 
