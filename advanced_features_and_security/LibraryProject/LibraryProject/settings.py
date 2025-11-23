@@ -131,6 +131,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Security Settings
 # These settings enhance application security by preventing common vulnerabilities
+SECURE_SSL_REDIRECT = True  # Redirects all HTTP requests to HTTPS
+SECURE_HSTS_SECONDS = 31536000  # Enforces HTTPS for one year (31536000 seconds)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Includes subdomains in HSTS policy
+SECURE_HSTS_PRELOAD = True  # Allows preloading in browser HSTS lists
 SECURE_BROWSER_XSS_FILTER = True  # Enables XSS filtering in browsers
 X_FRAME_OPTIONS = 'DENY'  # Prevents clickjacking by denying iframe embedding
 SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevents MIME type sniffing
