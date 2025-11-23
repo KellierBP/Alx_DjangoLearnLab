@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Example Form</title>
+</head>
+<body>
+    <h1>Example Form</h1>
+    <p>This form demonstrates secure input handling with CSRF protection and validation.</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+    <a href="{% url 'book_list' %}">Back to Book List</a>
+</body>
+</html>

@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import permission_required
 from django.contrib import messages
 from .models import Book
-from .forms import BookForm  # Assuming you have a form
+from .forms import BookForm, ExampleForm  # Secure forms with validation
 
 # Create your views here.
 
@@ -52,3 +52,22 @@ def book_delete(request, pk):
         messages.success(request, 'Book deleted successfully.')
         return redirect('book_list')
     return render(request, 'bookshelf/book_confirm_delete.html', {'book': book})
+
+def example_form_view(request):
+    """
+    Example view demonstrating secure form handling.
+    Uses Django forms for input validation and CSRF protection.
+    """
+    if request.method == 'POST':
+        form = ExampleForm(request.POST)
+        if form.is_valid():
+            # Process the form data securely
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            message = form.cleaned_data['message']
+            # In a real application, you would save this data or send an email
+            messages.success(request, f'Thank you {name}, your message has been received.')
+            return redirect('book_list')
+    else:
+        form = ExampleForm()
+    return render(request, 'bookshelf/form_example.html', {'form': form})
