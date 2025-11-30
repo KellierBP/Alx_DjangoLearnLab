@@ -28,7 +28,7 @@ class BookAPITestCase(APITestCase):
     def test_list_books_default_ordering(self):
         resp = self.client.get(self.list_url)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        results = resp.json()
+        results = resp.data
         # Ensure we returned the expected number
         self.assertEqual(len(results), 3)
         # Default ordering is by title (ascending)
@@ -38,28 +38,28 @@ class BookAPITestCase(APITestCase):
     def test_filter_by_author(self):
         resp = self.client.get(self.list_url, {'author': self.author1.id})
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        results = resp.json()
+        results = resp.data
         self.assertTrue(all(item['author'] == self.author1.id for item in results))
 
     def test_search_by_title_and_author(self):
         # Search by part of the title
         resp = self.client.get(self.list_url, {'search': 'Ring'})
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        results = resp.json()
+        results = resp.data
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0]['title'], 'The Ring')
 
         # Search by author name
         resp2 = self.client.get(self.list_url, {'search': 'Tolkien'})
         self.assertEqual(resp2.status_code, status.HTTP_200_OK)
-        results2 = resp2.json()
+        results2 = resp2.data
         self.assertGreaterEqual(len(results2), 1)
         self.assertTrue(any('Tolkien' in self.author2.name for _ in results2))
 
     def test_ordering_by_publication_year(self):
         resp = self.client.get(self.list_url, {'ordering': '-publication_year'})
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        results = resp.json()
+        results = resp.data
         years = [item['publication_year'] for item in results]
         self.assertEqual(years, sorted(years, reverse=True))
 
@@ -74,7 +74,7 @@ class BookAPITestCase(APITestCase):
         payload = {'title': 'New Book', 'publication_year': 2020, 'author': self.author1.id}
         resp = self.client.post(self.create_url, payload, format='json')
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
-        data = resp.json()
+        data = resp.data
         self.assertEqual(data['title'], 'New Book')
         self.assertEqual(data['publication_year'], 2020)
 
