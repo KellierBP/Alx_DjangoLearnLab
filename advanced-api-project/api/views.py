@@ -19,6 +19,12 @@ query parameter (e.g. `?author=3`).
 
 from rest_framework import generics, permissions
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+
+from django.shortcuts import get_object_or_404
+
 from .models import Book
 from .serializers import BookSerializer
 
@@ -91,4 +97,60 @@ DetailView = BookDetail
 CreateView = BookCreate
 UpdateView = BookUpdate
 DeleteView = BookDelete
+ 
+
+class BookUpdateNoPK(APIView):
+	"""Update a book when the client supplies `id` in the request body.
+
+	This provides a `books/update` endpoint that accepts `PUT` or `PATCH`
+	with JSON containing an `id` field and the fields to change. It is
+	restricted to authenticated users.
+	"""
+
+	permission_classes = [permissions.IsAuthenticated]
+
+	def _get_book(self, request):
+		book_id = request.data.get('id') or request.query_params.get('id')
+		if not book_id:
+			return None, Response({'detail': 'Missing "id" in request.'}, status=status.HTTP_400_BAD_REQUEST)
+		book = get_object_or_404(Book, pk=book_id)
+		return book, None
+
+	def put(self, request, *args, **kwargs):
+		book, error = self._get_book(request)
+		if error:
+			return error
+		serializer = BookSerializer(book, data=request.data)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data)
+
+	def patch(self, request, *args, **kwargs):
+		book, error = self._get_book(request)
+		if error:
+			return error
+		serializer = BookSerializer(book, data=request.data, partial=True)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data)
+
+
+class BookDeleteNoPK(APIView):
+	"""Delete a book when the client supplies `id` in the request body.
+
+	Provides a `books/delete` endpoint that accepts `DELETE` and expects an
+	`id` field in the request body or as a query parameter. Restricted to
+	authenticated users.
+	"""
+
+	permission_classes = [permissions.IsAuthenticated]
+
+	def delete(self, request, *args, **kwargs):
+		book_id = request.data.get('id') or request.query_params.get('id')
+		if not book_id:
+			return Response({'detail': 'Missing "id" in request.'}, status=status.HTTP_400_BAD_REQUEST)
+		book = get_object_or_404(Book, pk=book_id)
+		book.delete()
+		return Response(status=status.HTTP_204_NO_CONTENT)
+
 

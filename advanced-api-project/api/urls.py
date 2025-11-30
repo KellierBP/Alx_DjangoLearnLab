@@ -23,4 +23,8 @@ urlpatterns = [
     path('books/<int:pk>/', views.BookDetail.as_view(), name='book-detail'),
     path('books/<int:pk>/update/', views.BookUpdate.as_view(), name='book-update'),
     path('books/<int:pk>/delete/', views.BookDelete.as_view(), name='book-delete'),
+    # Endpoints that accept an `id` in the request body/query params
+    # These provide routes matching `books/update` and `books/delete`.
+    path('books/update', views.BookUpdateNoPK.as_view(), name='book-update-no-pk'),
+    path('books/delete', views.BookDeleteNoPK.as_view(), name='book-delete-no-pk'),
 ]
