@@ -18,6 +18,7 @@ query parameter (e.g. `?author=3`).
 """
 
 from rest_framework import generics, permissions
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
