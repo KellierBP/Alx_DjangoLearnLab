@@ -34,6 +34,7 @@ from .serializers import BookSerializer
 # the DjangoFilterBackend import will raise ImportError; in that case
 # only the SearchFilter and OrderingFilter will function.
 from django_filters.rest_framework import DjangoFilterBackend
+from django_filters import rest_framework
 
 
 class BookList(generics.ListAPIView):
