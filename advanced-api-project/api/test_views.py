@@ -70,7 +70,9 @@ class BookAPITestCase(APITestCase):
         self.assertIn(response.status_code, (status.HTTP_401_UNAUTHORIZED, status.HTTP_403_FORBIDDEN))
 
     def test_create_book_authenticated(self):
-        self.client.force_authenticate(user=self.user)
+        # Use session login to authenticate (tests require username/password)
+        logged_in = self.client.login(username='tester', password='password')
+        self.assertTrue(logged_in)
         payload = {'title': 'New Book', 'publication_year': 2020, 'author': self.author1.id}
         response = self.client.post(self.create_url, payload, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -80,7 +82,9 @@ class BookAPITestCase(APITestCase):
 
     def test_update_book_authenticated(self):
         url = reverse('api:book-update', kwargs={'pk': self.book1.pk})
-        self.client.force_authenticate(user=self.user)
+        # Authenticate using session login
+        logged_in = self.client.login(username='tester', password='password')
+        self.assertTrue(logged_in)
         response = self.client.patch(url, {'title': 'A Tale Updated'}, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.book1.refresh_from_db()
@@ -88,7 +92,9 @@ class BookAPITestCase(APITestCase):
 
     def test_delete_book_authenticated(self):
         url = reverse('api:book-delete', kwargs={'pk': self.book2.pk})
-        self.client.force_authenticate(user=self.user)
+        # Authenticate using session login
+        logged_in = self.client.login(username='tester', password='password')
+        self.assertTrue(logged_in)
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         with self.assertRaises(Book.DoesNotExist):
