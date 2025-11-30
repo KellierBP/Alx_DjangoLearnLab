@@ -81,3 +81,14 @@ class BookDelete(generics.DestroyAPIView):
 	serializer_class = BookSerializer
 	permission_classes = [permissions.IsAuthenticated]
 
+
+# Backwards-compatible / alternate names
+# Some tools or tests expect generic names such as `ListView`, `DetailView`,
+# `CreateView`, `UpdateView`, and `DeleteView`. Provide simple aliases that
+# point to the implementations above so both naming styles work.
+ListView = BookList
+DetailView = BookDetail
+CreateView = BookCreate
+UpdateView = BookUpdate
+DeleteView = BookDelete
+
