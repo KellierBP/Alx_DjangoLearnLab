@@ -116,7 +116,7 @@ class FeedView(viewsets.ReadOnlyModelViewSet):
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, generics
 from .models import Like
 from django.contrib.contenttypes.models import ContentType
 
@@ -129,23 +129,17 @@ class LikePostView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
-        try:
-            post = Post.objects.get(pk=pk)
-        except Post.DoesNotExist:
-            return Response(
-                {'error': 'Post not found'},
-                status=status.HTTP_404_NOT_FOUND
-            )
+        # Using generics.get_object_or_404(Post, pk=pk) pattern
+        post = generics.get_object_or_404(Post, pk=pk)
 
-        # Check if already liked
-        if Like.objects.filter(user=request.user, post=post).exists():
+        # Using Like.objects.get_or_create(user=request.user, post=post) pattern
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
+
+        if not created:
             return Response(
                 {'message': 'You have already liked this post'},
                 status=status.HTTP_200_OK
             )
-
-        # Create like
-        Like.objects.create(user=request.user, post=post)
 
         # Create notification for post author (if not liking own post)
         if post.author != request.user:

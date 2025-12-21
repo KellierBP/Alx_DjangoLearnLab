@@ -194,6 +194,34 @@ The API will be available at `http://127.0.0.1:8000/`
 - **Description**: Shows posts from users you follow, ordered by newest first
 - **Query Parameters**: `page`, `page_size`
 
+### Likes Endpoints
+
+#### Like a Post
+- **URL**: `/api/posts/<pk>/like/`
+- **Method**: `POST`
+- **Authentication**: Required
+- **Response**: Success message and likes count
+
+#### Unlike a Post
+- **URL**: `/api/posts/<pk>/unlike/`
+- **Method**: `POST`
+- **Authentication**: Required
+- **Response**: Success message and likes count
+
+### Notifications Endpoints
+
+#### Get Notifications
+- **URL**: `/api/notifications/`
+- **Method**: `GET`
+- **Authentication**: Required
+- **Description**: View all notifications for the authenticated user
+
+#### Mark Notification as Read
+- **URL**: `/api/notifications/<pk>/read/`
+- **Method**: `POST`
+- **Authentication**: Required
+- **Response**: Success message and notification data
+
 ## Testing with Postman
 
 ### 1. Register a New User
