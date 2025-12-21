@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+# Models using models.TextField() for content fields
 
 class Post(models.Model):
     """
