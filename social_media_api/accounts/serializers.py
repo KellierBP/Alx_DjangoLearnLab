@@ -39,7 +39,8 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         """Create user and generate authentication token."""
         validated_data.pop('password2')
-        user = User.objects.create_user(
+        # Use get_user_model().objects.create_user for creating the user
+        user = get_user_model().objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
             password=validated_data['password'],
