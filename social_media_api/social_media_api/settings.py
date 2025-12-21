@@ -86,6 +86,7 @@ WSGI_APPLICATION = 'social_media_api.wsgi.application'
 
 # Use dj-database-url to parse DATABASE_URL environment variable
 # Falls back to SQLite for local development
+# For manual PostgreSQL configuration, use: 'NAME', 'USER', 'PASSWORD', 'HOST', 'PORT'
 DATABASES = {
     'default': dj_database_url.config(
         default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
