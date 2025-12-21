@@ -7,6 +7,7 @@ from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
 
 User = get_user_model()
 
+# Views using generics.GenericAPIView and CustomUser.objects.all() patterns
 
 class RegisterView(generics.CreateAPIView):
     """
