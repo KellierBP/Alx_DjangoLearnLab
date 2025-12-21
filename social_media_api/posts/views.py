@@ -74,3 +74,30 @@ class CommentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         """Set the author to the current user when creating a comment."""
         serializer.save(author=self.request.user)
+
+
+class FeedView(viewsets.ReadOnlyModelViewSet):
+    """
+    ViewSet for user feed.
+    Shows posts from users that the current user follows.
+    
+    GET /api/feed/
+    
+    Returns posts ordered by creation date (newest first).
+    Requires authentication.
+    """
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    pagination_class = PostPagination
+    ordering = ['-created_at']
+
+    def get_queryset(self):
+        """
+        Return posts from users that the current user follows.
+        Ordered by creation date (newest first).
+        """
+        # Get the users that the current user follows
+        following_users = self.request.user.following.all()
+        
+        # Get posts from those users, ordered by newest first
+        return Post.objects.filter(author__in=following_users).order_by('-created_at')

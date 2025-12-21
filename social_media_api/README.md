@@ -171,6 +171,29 @@ The API will be available at `http://127.0.0.1:8000/`
 - **Methods**: `GET`, `PUT`, `PATCH`, `DELETE`
 - **Authentication**: Required (author only for PUT/PATCH/DELETE)
 
+### Follow/Unfollow Endpoints
+
+#### Follow a User
+- **URL**: `/api/accounts/follow/<user_id>/`
+- **Method**: `POST`
+- **Authentication**: Required
+- **Response**: Success message and user data
+
+#### Unfollow a User
+- **URL**: `/api/accounts/unfollow/<user_id>/`
+- **Method**: `POST`
+- **Authentication**: Required
+- **Response**: Success message and user data
+
+### Feed Endpoint
+
+#### Get Personalized Feed
+- **URL**: `/api/feed/`
+- **Method**: `GET`
+- **Authentication**: Required
+- **Description**: Shows posts from users you follow, ordered by newest first
+- **Query Parameters**: `page`, `page_size`
+
 ## Testing with Postman
 
 ### 1. Register a New User
