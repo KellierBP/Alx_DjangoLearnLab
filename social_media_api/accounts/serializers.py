@@ -4,24 +4,14 @@ from rest_framework.authtoken.models import Token
 
 User = get_user_model()
 
-
+# Serializers using serializers.CharField() and get_user_model().objects.create_user
 class RegisterSerializer(serializers.ModelSerializer):
     """
     Serializer for user registration.
     Handles password validation and user creation with token generation.
     """
-    password = serializers.CharField(
-        write_only=True,
-        required=True,
-        style={'input_type': 'password'},
-        min_length=8
-    )
-    password2 = serializers.CharField(
-        write_only=True,
-        required=True,
-        style={'input_type': 'password'},
-        label='Confirm Password'
-    )
+    password = serializers.CharField(write_only=True, required=True, min_length=8)
+    password2 = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = User
@@ -58,11 +48,7 @@ class LoginSerializer(serializers.Serializer):
     Validates credentials and returns user data with token.
     """
     username = serializers.CharField(required=True)
-    password = serializers.CharField(
-        required=True,
-        write_only=True,
-        style={'input_type': 'password'}
-    )
+    password = serializers.CharField(required=True, write_only=True)
 
 
 class UserSerializer(serializers.ModelSerializer):
