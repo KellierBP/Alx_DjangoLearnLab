@@ -139,6 +139,38 @@ The API will be available at `http://127.0.0.1:8000/`
   }
   ```
 
+### Posts Endpoints
+
+#### List All Posts
+- **URL**: `/api/posts/`
+- **Method**: `GET`
+- **Query Parameters**: `page`, `page_size`, `search`, `ordering`
+- **Example**: `/api/posts/?search=django&page=1`
+
+#### Create a Post
+- **URL**: `/api/posts/`
+- **Method**: `POST`
+- **Authentication**: Required
+- **Body**: `{"title": "Post Title", "content": "Post content"}`
+
+#### Update/Delete a Post
+- **URL**: `/api/posts/{id}/`
+- **Methods**: `GET`, `PUT`, `PATCH`, `DELETE`
+- **Authentication**: Required (author only for PUT/PATCH/DELETE)
+
+### Comments Endpoints
+
+#### List/Create Comments
+- **URL**: `/api/comments/`
+- **Methods**: `GET`, `POST`
+- **Query Parameters**: `post` (filter by post ID)
+- **Example**: `/api/comments/?post=1`
+
+#### Update/Delete a Comment
+- **URL**: `/api/comments/{id}/`
+- **Methods**: `GET`, `PUT`, `PATCH`, `DELETE`
+- **Authentication**: Required (author only for PUT/PATCH/DELETE)
+
 ## Testing with Postman
 
 ### 1. Register a New User
@@ -231,13 +263,24 @@ social_media_api/
 │   ├── urls.py
 │   ├── asgi.py
 │   └── wsgi.py
-└── accounts/
+├── accounts/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── views.py
+│   ├── urls.py
+│   ├── tests.py
+│   └── migrations/
+└── posts/
     ├── __init__.py
     ├── admin.py
     ├── apps.py
     ├── models.py
     ├── serializers.py
     ├── views.py
+    ├── permissions.py
     ├── urls.py
     ├── tests.py
     └── migrations/
@@ -260,14 +303,29 @@ social_media_api/
 - `profile_picture`: Image field for profile picture (uploaded to `media/profile_pictures/`)
 - `followers`: Many-to-many field for follower relationships (symmetrical=False)
 
+## Features Implemented
+
+### User Authentication
+- Custom user model with bio, profile picture, and followers
+- Token-based authentication
+- User registration and login
+- Profile management
+
+### Posts & Comments
+- Create, read, update, and delete posts
+- Create, read, update, and delete comments
+- Author-only permissions for editing/deleting
+- Pagination (10 items per page)
+- Search posts by title and content
+- Filter comments by post
+
 ## Next Steps
 
-- Implement post creation and management
-- Add comments and likes functionality
 - Create follow/unfollow endpoints
 - Add user feed based on followed users
-- Implement notifications system
-- Add search functionality
+- Implement likes functionality
+- Add notifications system
+- Implement real-time updates with WebSockets
 
 ## License
 
