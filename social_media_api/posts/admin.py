@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post, Comment
+from .models import Post, Comment, Like
 
 
 @admin.register(Post)
@@ -19,4 +19,14 @@ class CommentAdmin(admin.ModelAdmin):
     list_filter = ['created_at', 'updated_at']
     search_fields = ['content', 'author__username', 'post__title']
     readonly_fields = ['created_at', 'updated_at']
+    date_hierarchy = 'created_at'
+
+
+@admin.register(Like)
+class LikeAdmin(admin.ModelAdmin):
+    """Admin interface for Like model."""
+    list_display = ['user', 'post', 'created_at']
+    list_filter = ['created_at']
+    search_fields = ['user__username', 'post__title']
+    readonly_fields = ['created_at']
     date_hierarchy = 'created_at'

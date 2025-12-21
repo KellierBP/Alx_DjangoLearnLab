@@ -73,7 +73,18 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         """Set the author to the current user when creating a comment."""
-        serializer.save(author=self.request.user)
+        comment = serializer.save(author=self.request.user)
+        
+        # Create notification for post author (if not commenting on own post)
+        if comment.post.author != self.request.user:
+            from notifications.models import Notification
+            Notification.objects.create(
+                recipient=comment.post.author,
+                actor=self.request.user,
+                verb='commented on your post',
+                target=comment.post
+            )
+
 
 
 class FeedView(viewsets.ReadOnlyModelViewSet):
@@ -101,3 +112,91 @@ class FeedView(viewsets.ReadOnlyModelViewSet):
         
         # Get posts from those users, ordered by newest first
         return Post.objects.filter(author__in=following_users).order_by('-created_at')
+
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Like
+from django.contrib.contenttypes.models import ContentType
+
+
+class LikePostView(APIView):
+    """
+    API endpoint for liking a post.
+    POST: Like a post and create notification for post author.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        try:
+            post = Post.objects.get(pk=pk)
+        except Post.DoesNotExist:
+            return Response(
+                {'error': 'Post not found'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        # Check if already liked
+        if Like.objects.filter(user=request.user, post=post).exists():
+            return Response(
+                {'message': 'You have already liked this post'},
+                status=status.HTTP_200_OK
+            )
+
+        # Create like
+        Like.objects.create(user=request.user, post=post)
+
+        # Create notification for post author (if not liking own post)
+        if post.author != request.user:
+            from notifications.models import Notification
+            Notification.objects.create(
+                recipient=post.author,
+                actor=request.user,
+                verb='liked your post',
+                target=post
+            )
+
+        likes_count = post.likes.count()
+        return Response(
+            {
+                'message': 'Post liked successfully',
+                'likes_count': likes_count
+            },
+            status=status.HTTP_200_OK
+        )
+
+
+class UnlikePostView(APIView):
+    """
+    API endpoint for unliking a post.
+    POST: Remove like from a post.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        try:
+            post = Post.objects.get(pk=pk)
+        except Post.DoesNotExist:
+            return Response(
+                {'error': 'Post not found'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        # Check if liked
+        try:
+            like = Like.objects.get(user=request.user, post=post)
+            like.delete()
+            likes_count = post.likes.count()
+            return Response(
+                {
+                    'message': 'Post unliked successfully',
+                    'likes_count': likes_count
+                },
+                status=status.HTTP_200_OK
+            )
+        except Like.DoesNotExist:
+            return Response(
+                {'message': 'You have not liked this post'},
+                status=status.HTTP_200_OK
+            )

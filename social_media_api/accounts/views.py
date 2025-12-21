@@ -108,6 +108,14 @@ class FollowView(APIView):
         # Add to following list
         request.user.following.add(user_to_follow)
         
+        # Create notification for the followed user
+        from notifications.models import Notification
+        Notification.objects.create(
+            recipient=user_to_follow,
+            actor=request.user,
+            verb='started following you'
+        )
+        
         return Response(
             {
                 'message': f'You are now following {user_to_follow.username}',
